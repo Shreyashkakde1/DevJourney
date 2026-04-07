@@ -1,0 +1,67 @@
+services:
+  accounts:
+    image: "shreyash/accounts:s4"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - shreyashbank
+
+  loans:
+    image: "shreyash/loans:s4"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - shreyashbank
+
+
+  cards:
+    image: "shreyash/cards:s4"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - shreyashbank
+
+
+networks:
+  shreyashbank:
+    driver: "bridge"
+
+
+
+
+
+
+#              🌐 Host Machine (Your PC)
+#              -------------------------------------------------
+#              |                                               |
+#              |   http://localhost:8080   http://localhost:8090   http://localhost:9000
+#              |           │                        │                      │
+#              |           ▼                        ▼                      ▼
+#              |     ┌────────────┐         ┌────────────┐        ┌────────────┐
+#              |     │  accounts  │         │   loans    │        │   cards    │
+#              |     │  (8080)    │         │  (8090)    │        │  (9000)    │
+#              |     │ accounts-ms│         │ loans-ms   │        │ cards-ms   │
+#              |     └─────┬──────┘         └─────┬──────┘        └─────┬──────┘
+#              |           │                      │                     │
+#              |           └──────────┬───────────┴──────────┬──────────┘
+#              |                      │                      │
+#              |              🌐 Docker Network
+#              |                 (bridge)
+#              |              "shreyashbank"
+#              |                                               |
+#              -------------------------------------------------
