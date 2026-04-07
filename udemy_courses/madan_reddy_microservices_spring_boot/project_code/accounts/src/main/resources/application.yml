@@ -3,10 +3,12 @@ server:
 
 spring:
   application:
-    name: cards
+    name: accounts
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/shreyash
+    # using host.docker.interna because wanted to use local postgres data base
+#    url: jdbc:postgresql://localhost:5432/shreyash
+    url: jdbc:postgresql://host.docker.internal:5432/shreyash
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
