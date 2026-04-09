@@ -5,6 +5,13 @@ spring:
   application:
     name: accounts
 
+  profiles:
+    active: "prod"
+
+  config:
+#    import: "optional:configserver:http://localhost:8071/" (if connection was not possible by whatever reason then it will user the default config avaialble in this file)
+    import: "configserver:http://configserver:8071/"
+
   datasource:
     # using host.docker.interna because wanted to use local postgres data base
 #    url: jdbc:postgresql://localhost:5432/shreyash
@@ -26,7 +33,22 @@ spring:
       hibernate:
         format_sql: true
 
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

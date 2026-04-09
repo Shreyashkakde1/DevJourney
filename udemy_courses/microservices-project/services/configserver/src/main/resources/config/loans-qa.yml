@@ -1,0 +1,11 @@
+build:
+  version: "2.0"
+
+loans:
+  message: "Welcome to shreyashbank loans related QA APIs "
+  contactDetails:
+    name: "Smitha Ray - QA Lead"
+    email: "smitha@shreyashbank.com"
+  onCallSupport:
+    - (666) 265-3765
+    - (666) 734-8371

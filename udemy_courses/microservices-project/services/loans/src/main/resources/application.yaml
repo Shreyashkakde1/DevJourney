@@ -4,9 +4,16 @@ server:
 spring:
   application:
     name: loans
+
+  profiles:
+    active: "prod"
+
+  config:
+    import: "configserver:http://configserver:8071/"
+
   datasource:
     # using host.docker.interna because wanted to use local postgres data base
-    #    url: jdbc:postgresql://localhost:5432/shreyash
+#    url: jdbc:postgresql://localhost:5432/shreyash
     url: jdbc:postgresql://host.docker.internal:5432/shreyash
     username: postgres
     password: root
@@ -25,7 +32,23 @@ spring:
       hibernate:
         format_sql: true
 
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

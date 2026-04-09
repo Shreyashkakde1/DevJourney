@@ -1,0 +1,106 @@
+services:
+
+  rabbit:
+    image: rabbitmq:4-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+
+  configserver:
+    image: "shreyash/configserver:s6"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+
+  accounts:
+    image: "shreyash/accounts:s6"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+  loans:
+    image: "shreyash/loans:s6"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+
+  cards:
+    image: "shreyash/cards:s6"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
+
+networks:
+  shreyashbank:
+    driver: "bridge"
+
+
+#              🌐 Host Machine (Your PC)
+#              -------------------------------------------------
+#              |                                               |
+#              |   http://localhost:8080   http://localhost:8090   http://localhost:9000
+#              |           │                        │                      │
+#              |           ▼                        ▼                      ▼
+#              |     ┌────────────┐         ┌────────────┐        ┌────────────┐
+#              |     │  accounts  │         │   loans    │        │   cards    │
+#              |     │  (8080)    │         │  (8090)    │        │  (9000)    │
+#              |     │ accounts-ms│         │ loans-ms   │        │ cards-ms   │
+#              |     └─────┬──────┘         └─────┬──────┘        └─────┬──────┘
+#              |           │                      │                     │
+#              |           └──────────┬───────────┴──────────┬──────────┘
+#              |                      │                      │
+#              |              🌐 Docker Network
+#              |                 (bridge)
+#              |              "shreyashbank"
+#              |                                               |
+#              -------------------------------------------------
