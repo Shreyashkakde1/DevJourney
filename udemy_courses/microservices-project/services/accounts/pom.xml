@@ -70,10 +70,11 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
-		</dependency>
+<!--		this is been commented becasue in section 6 we don't want to carry lots of dependencies-->
+		<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -127,7 +128,7 @@
 				<version>3.5.1</version>
 				<configuration>
 					<to>
-						<image>shreyash/${project.artifactId}:s6</image>
+						<image>shreyash/${project.artifactId}:s7</image>
 					</to>
 				</configuration>
 			</plugin>

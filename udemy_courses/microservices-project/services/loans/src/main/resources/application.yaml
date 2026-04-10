@@ -10,11 +10,13 @@ spring:
 
   config:
     import: "configserver:http://configserver:8071/"
+#    import: "configserver:http://localhost:8071/"
 
   datasource:
     # using host.docker.interna because wanted to use local postgres data base
 #    url: jdbc:postgresql://localhost:5432/shreyash
-    url: jdbc:postgresql://host.docker.internal:5432/shreyash
+#    url: jdbc:postgresql://host.docker.internal:5432/shreyash
+    url: jdbc:postgresql://localhost:5434/loansdb?TimeZone=Asia/Kolkata
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -31,12 +33,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+      jdbc:
+        time_zone: Asia/Kolkata
 
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
 
 logging:
   level:

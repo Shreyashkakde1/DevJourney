@@ -1,30 +1,70 @@
 services:
 
-  rabbit:
-    image: rabbitmq:4-management
-    hostname: rabbitmq
+#  rabbit:
+#    image: rabbitmq:4-management
+#    hostname: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    healthcheck:
+#      test: rabbitmq-diagnostics check_port_connectivity
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 5s
+#    extends:
+#      file: common-config.yml
+#      service: network-deploy-service
+
+  shreyashbankdb:
+    container_name: shreyashbankdb
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      - "5432:5432"
     extends:
       file: common-config.yml
-      service: network-deploy-service
+      service: microservice-db-config
+    environment:
+      POSTGRES_DB: shreyashbankdb
 
+#  accountsdb:
+#    container_name: accountsdb
+#    ports:
+#      - "5432:5432"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
+#    environment:
+#      POSTGRES_DB: accountsdb
+
+#  cardsdb:
+#    container_name: cardsdb
+#    ports:
+#      - "5434:5432"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
+#    environment:
+#      POSTGRES_DB: cardsdb
+#
+#
+#  loansdb:
+#    container_name: loansdb
+#    ports:
+#      - "5435:5432"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
+#    environment:
+#      POSTGRES_DB: loansdb
 
   configserver:
-    image: "shreyash/configserver:s6"
+    image: "shreyash/configserver:s7"
     container_name: configserver-ms
     ports:
       - "8071:8071"
-    depends_on:
-      rabbit:
-        condition: service_healthy
+#    depends_on:
+#      rabbit:
+#        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -37,44 +77,59 @@ services:
 
 
   accounts:
-    image: "shreyash/accounts:s6"
+    image: "shreyash/accounts:s7"
     container_name: accounts-ms
     ports:
       - "8080:8080"
     depends_on:
       configserver:
         condition: service_healthy
+      shreyashbankdb:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://shreyashbankdb:5432/shreyashbankdb"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Kolkata"
+      TZ: Asia/Kolkata
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   loans:
-    image: "shreyash/loans:s6"
+    image: "shreyash/loans:s7"
     container_name: loans-ms
     ports:
       - "8090:8090"
     depends_on:
       configserver:
         condition: service_healthy
+      shreyashbankdb:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://shreyashbankdb:5432/shreyashbankdb"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Kolkata"
+      TZ: Asia/Kolkata
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
 
   cards:
-    image: "shreyash/cards:s6"
+    image: "shreyash/cards:s7"
     container_name: cards-ms
     ports:
       - "9000:9000"
     depends_on:
       configserver:
         condition: service_healthy
+      shreyashbankdb:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "loans"
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://shreyashbankdb:5432/shreyashbankdb"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Kolkata"
+      TZ: Asia/Kolkata
     extends:
       file: common-config.yml
       service: microservice-configserver-config
