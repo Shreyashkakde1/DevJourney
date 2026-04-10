@@ -4,6 +4,22 @@ services:
       - shreyashbank
 
 
+  microservice-db-config:
+    extends:
+      service: network-deploy-service
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      TZ: Asia/Kolkata
+
+
   microservice-base-config:
     extends:
       service: network-deploy-service
@@ -20,15 +36,5 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
-
-
-
-
-
-
-
-
-
-
-
-
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
