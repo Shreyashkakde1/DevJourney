@@ -14,9 +14,9 @@ spring:
 
   datasource:
     # using host.docker.interna because wanted to use local postgres data base
-#    url: jdbc:postgresql://localhost:5432/shreyash
-#    url: jdbc:postgresql://host.docker.internal:5432/shreyash
-    url: jdbc:postgresql://localhost:5434/loansdb?TimeZone=Asia/Kolkata
+#    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://host.docker.internal:5432/postgres
+#    url: jdbc:postgresql://localhost:5434/loansdb?TimeZone=Asia/Kolkata
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -54,5 +54,25 @@ management:
       exposure:
         include: "*"
   endpoint:
-    health:
-      show-details: always
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+
+# this info will be available in the Eureka Dashboard when you will click on the link under Status tab
+info:
+  app:
+    name: "loans"
+    description: "Eazy Bank Loans Application"
+    version: "1.0.0"
