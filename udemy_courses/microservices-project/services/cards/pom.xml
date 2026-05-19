@@ -60,6 +60,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -125,7 +130,7 @@
 				<version>3.5.1</version>
 				<configuration>
 					<to>
-						<image>shreyash/${project.artifactId}:s7</image>
+						<image>shreyash/${project.artifactId}:s8</image>
 					</to>
 				</configuration>
 			</plugin>

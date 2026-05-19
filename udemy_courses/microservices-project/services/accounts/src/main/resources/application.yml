@@ -15,8 +15,9 @@ spring:
 
   datasource:
     # using host.docker.interna because wanted to use local postgres data base
-    url: jdbc:postgresql://localhost:5433/accountsdb?TimeZone=Asia/Kolkata
-#    url: jdbc:postgresql://host.docker.internal:5432/shreyash
+#    url: jdbc:postgresql://localhost:5433/accountsdb?TimeZone=Asia/Kolkata
+#    url: jdbc:postgresql://localhost:5432/postgres?TimeZone=Asia/Kolkata
+    url: jdbc:postgresql://host.docker.internal:5432/postgres
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -52,6 +53,29 @@ management:
     web:
       exposure:
         include: "*"
+  info:
+    env:
+      enabled: true
   endpoint:
     health:
       show-details: always
+    shutdown:
+#      enabled: true
+      access: unrestricted
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+
+# this info will be available in the Eureka Dashboard when you will click on the link under Status tab
+info:
+  app:
+    name: "accounts"
+    description: "Eazy Bank Accounts Application"
+    version: "1.0.0"

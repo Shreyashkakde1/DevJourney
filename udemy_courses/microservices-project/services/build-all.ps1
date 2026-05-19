@@ -1,7 +1,7 @@
 # build-all.ps1
 
 # List of service directories
-$services = @("accounts", "cards", "configserver", "loans")
+$services = @("accounts", "cards", "configserver", "loans", "eurekaserver")
 
 # Loop through each folder
 foreach ($service in $services) {
