@@ -130,7 +130,7 @@
 				<version>3.5.1</version>
 				<configuration>
 					<to>
-						<image>shreyash/${project.artifactId}:s8</image>
+						<image>shreyash/${project.artifactId}:s9</image>
 					</to>
 				</configuration>
 			</plugin>
