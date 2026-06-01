@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: gatewayserver
+
+  config:
+    #    import: "optional:configserver:http://localhost:8071/" (if connection was not possible by whatever reason then it will user the default config avaialble in this file)
+#        import: "configserver:http://localhost:8071/"
+    import: "configserver:http://configserver:8071/"
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+              lowerCaseServiceId: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      access: unrestricted
+
+
+# this info will be available in the Eureka Dashboard when you will click on the link under Status tab
+info:
+  app:
+    name: "gatewayserver"
+    description: "Eazy Bank Gateway Server Application"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      eazybytes:
+        gatewayserver: DEBUG
